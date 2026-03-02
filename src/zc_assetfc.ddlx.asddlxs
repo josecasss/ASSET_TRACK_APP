@@ -1,0 +1,193 @@
+@Metadata.layer: #CORE
+@UI: { headerInfo: { typeName:       'Asset',
+                     typeNamePlural: 'Assets',
+                     title:          { type: #STANDARD,
+                                       label: 'Assets',
+                                       value: 'AssetTagNumber' } },
+             presentationVariant: [{ sortOrder: [{ by: 'AssetTagNumber',
+                                          direction: #ASC }],
+                              visualizations: [{ type: #AS_LINEITEM }] }] }
+annotate view ZC_ASSETFC with
+{
+  @UI.facet: [{ id     : 'AssetMasterData',
+                purpose: #STANDARD,
+                type   : #IDENTIFICATION_REFERENCE,      // Identification Reference ( Detalles)
+                label  : 'Asset Master Data ',           // Como se ve en la pestaña
+                position: 10 },
+                { id:          'History',          //Pestana detalles de historial hijo
+                purpose:       #STANDARD,
+                type:          #LINEITEM_REFERENCE,
+                label:         'History',
+                position:      20,
+                targetElement: '_AssetHistory'}]
+  @UI.hidden: true
+  @UI: { lineItem:       [{ position  : 10,              // Listado posicion ( Columnas de los registros )
+                            importance: #HIGH,           // Importancia para visualizacion en smartphones
+                            label     : 'AssetTagNumber' },   // Label, si no se asigna aca, cogera la descripcion del elemento de dato
+
+                          { type: #FOR_ACTION,           // Nombre del boton en la lista
+                            dataAction: 'flagAsDamage',  // Nombre del metodo ABAP en el Behavior Definition
+                            label: 'FlagAsDamage',
+                            position: 10 },
+
+                          { type: #FOR_ACTION,
+                            dataAction: 'notMatchCostCenter',
+                            label: 'NotMatchCostCenter',
+                            position: 20 },
+
+                          { type: #FOR_ACTION,
+                            dataAction: 'proposeWriteOff',
+                            label: 'ProposeWriteOff',
+                            position: 30 },
+
+                          { type: #FOR_ACTION,
+                            dataAction: 'flagAsSold',
+                            label: 'FlagAsSold',
+                            position: 40 },
+
+                          { type: #FOR_ACTION,
+                            dataAction: 'resetToNormal',
+                            label: 'ResetToNormal',
+                            position: 50 }],
+
+         selectionField: [{ position: 10}],             // Campos de seleccion
+         identification: [{ position: 10 },              // Detalles posicion                            },             // Detalles posicion
+
+                          { type: #FOR_ACTION,           // Nombre del boton en la lista
+                            dataAction: 'flagAsDamage',  // Nombre del metodo ABAP en el Behavior Definition
+                            label: 'FlagAsDamage',
+                            position: 10 },
+
+                          { type: #FOR_ACTION,
+                            dataAction: 'notMatchCostCenter',
+                            label: 'NotMatchCostCenter',
+                            position: 20 },
+
+                          { type: #FOR_ACTION,
+                            dataAction: 'proposeWriteOff',
+                            label: 'ProposeWriteOff',
+                            position: 30 },
+
+                          { type: #FOR_ACTION,
+                            dataAction: 'flagAsSold',
+                            label: 'FlagAsSold',
+                            position: 40 },
+
+                          { type: #FOR_ACTION,
+                            dataAction: 'resetToNormal',
+                            label: 'ResetToNormal',
+                            position: 50 }] }
+  UUID;
+
+  @Consumption.valueHelpDefinition: [{ entity: { name   : 'ZDD_ASSET_TAG_VH_FC',
+                                                 element: 'AssetTagNumber' }}]
+  @UI: {lineItem: [{ position: 20,
+                     importance: #MEDIUM,
+                     label     : 'Asset Tag Number' }],
+        identification: [{ position: 20,
+                           label     : 'Asset Tag Number' }],
+                           textArrangement: #TEXT_LAST,
+        selectionField: [{ position: 20 }]}
+
+  AssetTagNumber;
+
+
+  //  @UI: { identification: [{ position: 25  } ] }
+  //
+  //  AssetTagNumberD;
+
+  @UI: {lineItem: [{ position: 30,
+                     importance: #LOW }],
+        identification: [{ position: 30  } ],
+        selectionField: [{ position: 30 } ] }
+  //  @UI.hidden: true
+
+  CompanyCode;
+
+  @UI: {lineItem: [{ position: 40,
+               importance: #LOW }],
+  identification: [{ position: 40  } ],
+  selectionField: [{ position: 40 }]}
+  MainAssetNumber;
+
+  @UI: {lineItem: [{ position: 50,
+               importance: #LOW }],
+  identification: [{ position: 50  } ],
+  selectionField: [{ position: 50 }]}
+  AssetSubNumber;
+
+  @Consumption.valueHelpDefinition: [{ entity: { name   : 'zdd_status_vh_fc',
+                                                 element: 'StatusCode' }}]
+
+  @UI: { lineItem:       [{ position  : 60,
+                            importance: #LOW,
+                            label     : 'Asset Status' }],
+         selectionField: [{ position:60 }],
+         textArrangement: #TEXT_LAST,          // Muestre solo el texto del estado( Valor implicito ) // TextArrangement aplica para el line item y el selection field
+         identification: [{ position: 60,
+                            label   : 'Asset Status' }] }
+  Status;
+
+  @Consumption.filter: { selectionType: #INTERVAL, multipleSelections: false }  //Calendario
+  @UI: {lineItem: [{ position: 70,
+               importance: #LOW,
+               label     : 'CreationDate' }],
+  identification: [{ position: 70,
+  label     : 'CreationDate' }],
+  selectionField: [{ position: 70 }]}
+  CreationDate;
+
+  @Consumption.filter: { selectionType: #INTERVAL, multipleSelections: false }  //Calendario
+  @UI: {lineItem: [{ position: 80,
+               importance: #LOW,
+               label     : 'ChangedDate' }],
+  identification: [{ position: 80,
+                    label     : 'ChangedDate' }],
+  selectionField: [{ position: 80 }]}
+  ChangedDate;
+  
+  @UI: {lineItem: [{ position: 75,
+                  importance: #LOW,
+                  label     : 'Description' }],
+  identification: [{ position: 75,
+                     label     : 'Description' }] }
+  AssetDescription;
+
+  @UI: {lineItem: [{ position: 90,
+               importance: #LOW }],
+  identification: [{ position: 90  } ],
+  selectionField: [{ position: 90 }]}
+  @UI.hidden: true
+  LocalCreatedBy;
+
+  @UI: {lineItem: [{ position: 100,
+               importance: #LOW }],
+  identification: [{ position: 100  } ],
+  selectionField: [{ position: 100 }]}
+  @UI.hidden: true
+  LocalCreatedAt;
+
+  @UI: {lineItem: [{ position: 110,
+               importance: #LOW }],
+  identification: [{ position: 110  } ],
+  selectionField: [{ position: 110 }]}
+  @UI.hidden: true
+  LocalLastChangedBy;
+
+  @UI: {lineItem: [{ position: 120,
+               importance: #LOW }],
+  identification: [{ position: 120  } ],
+  selectionField: [{ position: 120 }]}
+  @UI.hidden: true
+  LocalLastChangedAt;
+
+  @UI: {lineItem: [{ position: 130,
+               importance: #LOW }],
+  identification: [{ position: 130  } ],
+  selectionField: [{ position: 130 }]}
+  @UI.hidden: true
+  LastChangedAt;
+
+  @UI.hidden: true
+  _BaseEntity;
+}

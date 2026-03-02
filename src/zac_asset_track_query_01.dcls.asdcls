@@ -1,0 +1,10 @@
+@EndUserText.label: 'Access Control for Track Query 01'
+@MappingRole: true
+define role ZAC_ASSET_TRACK_QUERY_01 {
+    grant
+        select
+            on
+                ZASSET_TRACK_QUERY_01
+                    where
+                        inheriting conditions from entity ZR_ASSETFC;
+}

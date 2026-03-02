@@ -1,0 +1,109 @@
+managed implementation in class ZBP_R_ASSETFC unique;
+strict ( 2 );
+//with draft;
+with collaborative draft;
+
+extensible;
+define behavior for ZR_ASSETFC alias Asset
+persistent table zassetfc
+extensible
+draft table zasset_dfc query ZASSET_TRACK_QUERY_01
+lock master
+total etag LastChangedAt
+etag master LocalLastChangedAt
+authorization master ( global, instance )
+{
+
+  create ( authorization : global );
+  update;
+  delete;
+
+  association _AssetHistory { create; with draft; }
+
+  field ( numbering : managed, readonly ) //Numbering gestionado por RAP y solo lectura
+  uuid;
+
+  field ( readonly )
+  Status,
+  LastChangedAt,
+  LocalCreatedAt,
+  LocalCreatedby,
+  LocalLastChangedAt,
+  LocalLastChangedBy;
+
+  field ( mandatory )
+  AssetDescription,
+  companyCode;
+
+  field ( features : instance ) // Campos que cambian de acuerdo a la logica de negocio
+  AssetTagNumber;
+
+  //Acciones
+  //Features instance para acciones que afectan las instancias segun la logica de negocio
+  action ( features : instance, authorization : update ) flagAsDamage result [1] $self; //Result [1] indica que devuelve la misma para cada instancia, Actualizando
+  action ( features : instance, authorization : update ) notMatchCostCenter result [1] $self;
+  action ( features : instance, authorization : update ) proposeWriteOff;
+  action ( features : instance, authorization : update ) flagAsSold;
+  action ( features : instance, authorization : update ) resetToNormal;
+  //       parameter Z_AE_TRAVEL_DISCOUNT_T100950 result [1] $self;  //Form de la entidad abstracta
+
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Edit;
+  draft action Resume;
+  draft determine action Prepare;
+
+  draft action Share;
+
+  mapping for zassetfc corresponding extensible
+    {
+      UUID               = uuid;
+      AssetTagNumber     = asset_tag_number;
+      AssetDescription   = asset_description;
+      CompanyCode        = company_code;
+      MainAssetNumber    = main_asset_number;
+      AssetSubNumber     = asset_sub_number;
+      Status             = status;
+      CreationDate       = creation_date;
+      ChangedDate        = changed_date;
+      LocalCreatedBy     = local_created_by;
+      LocalCreatedAt     = local_created_at;
+      LocalLastChangedBy = local_last_changed_by;
+      LocalLastChangedAt = local_last_changed_at;
+      LastChangedAt      = last_changed_at;
+    }
+
+}
+
+define behavior for ZR_ASSETHISTORYFC alias AssetHistory
+persistent table zassethistoryfc
+extensible
+draft table zassthistory_dfc
+etag dependent by _Asset
+lock dependent by _Asset
+authorization dependent by _Asset
+{
+  field ( readonly )
+  UUID,
+  ParentUUID;
+
+  field ( numbering : managed )
+  UUID;
+
+
+  update;
+  delete;
+
+  mapping for zassethistoryfc corresponding extensible
+    {
+      UUID           = uuid;
+      ParentUUID     = parent_uuid;
+      HisID          = his_id;
+      PreviousStatus = previous_status;
+      NewStatus      = new_status;
+      Text000        = text000;
+    }
+
+  association _Asset { with draft; }
+
+}

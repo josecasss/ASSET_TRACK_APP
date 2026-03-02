@@ -1,0 +1,12 @@
+@EndUserText: {
+  label: 'Service Definition for ZC_ASSETFC'
+}
+@ObjectModel: {
+  leadingEntity: {
+    name: 'ZC_ASSETFC'
+  }
+}
+define service ZUI_ASSET_FC_O4FC provider contracts odata_v4_ui {
+  expose ZC_ASSETFC as Asset;
+  expose ZC_ASSETHISTORYFC as AssetHistory;
+}

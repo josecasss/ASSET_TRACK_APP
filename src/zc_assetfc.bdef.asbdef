@@ -1,0 +1,43 @@
+projection implementation in class ZBP_C_ASSETFC unique;
+strict ( 2 );
+extensible;
+//use draft;
+use collaborative draft;
+use side effects;
+define behavior for ZC_ASSETFC alias Asset
+extensible
+use etag
+{
+  use create;
+  use update;
+  use delete;
+
+
+  use action flagAsDamage;
+  use action flagAsSold;
+  use action notMatchCostCenter;
+  use action proposeWriteOff;
+  use action resetToNormal;
+
+  use action Edit;
+  use action Activate;
+  use action Discard;
+  use action Resume;
+  use action Prepare;
+
+  use action Share;
+
+  use association _AssetHistory { create; with draft; }
+
+}
+
+define behavior for ZC_ASSETHISTORYFC alias AssetHistory
+extensible
+use etag
+{
+  use update;
+  use delete;
+
+  use association _Asset { with draft; }
+
+}

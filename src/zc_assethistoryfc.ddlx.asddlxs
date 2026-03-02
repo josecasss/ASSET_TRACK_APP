@@ -1,0 +1,95 @@
+@Metadata.layer: #CORE
+@UI.headerInfo.title.type: #STANDARD
+@UI.headerInfo.title.value: 'UUID'
+@UI.headerInfo.description.type: #STANDARD
+@UI.headerInfo.description.value: 'UUID'
+annotate view ZC_ASSETHISTORYFC with
+{
+  @UI.facet: [ { id:              'History',
+                 purpose:         #STANDARD,
+                 type:            #IDENTIFICATION_REFERENCE,
+                 label:           'Asset History',
+                 position:        10 }  ]
+  @UI: { lineItem:       [ { position: 10, importance: #HIGH } ],
+         identification: [ { position: 10 } ] }
+  @UI.hidden:true
+  UUID;
+  
+  @EndUserText.label: 'ParentUUID'
+  @UI.identification: [ {
+    position: 20 , 
+    label: 'ParentUUID'
+  } ]
+  @UI.lineItem: [ {
+    position: 20 , 
+    label: 'ParentUUID'
+  } ]
+  @UI.selectionField: [ {
+    position: 20 
+  } ]
+  ParentUUID;
+  
+  @EndUserText.label: 'HisID'
+  @UI.identification: [ {
+    position: 30 , 
+    label: 'HisID'
+  } ]
+  @UI.lineItem: [ {
+    position: 30 , 
+    label: 'HisID'
+  } ]
+  @UI.selectionField: [ {
+    position: 30 
+  } ]
+  HisID;
+  
+  @UI.identification: [ {
+    position: 40 
+  } ]
+  @UI.lineItem: [ {
+    position: 40 
+  } ]
+  @UI.selectionField: [ {
+    position: 40 
+  } ]
+  PreviousStatus;
+  
+  @UI.identification: [ {
+    position: 50 
+  } ]
+  @UI.lineItem: [ {
+    position: 50 
+  } ]
+  @UI.selectionField: [ {
+    position: 50 
+  } ]
+  NewStatus;
+  
+  @EndUserText.label: 'Text000'
+  @UI.identification: [ {
+    position: 60 , 
+    label: 'Text000'
+  } ]
+  @UI.lineItem: [ {
+    position: 60 , 
+    label: 'Text000'
+  } ]
+  @UI.selectionField: [ {
+    position: 60 
+  } ]
+  Text000;
+  
+  @EndUserText.label: '_BaseEntity'
+  @UI.identification: [ {
+    position: 80 , 
+    label: '_BaseEntity'
+  } ]
+  @UI.lineItem: [ {
+    position: 80 , 
+    label: '_BaseEntity'
+  } ]
+  @UI.selectionField: [ {
+    position: 80 
+  } ]
+  _BaseEntity;
+}
