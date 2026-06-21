@@ -6,10 +6,9 @@ define root view entity ZR_ASSETFC
   as select from zassetfc as Asset
   composition [0..*] of ZR_ASSETHISTORYFC as _AssetHistory
   association [1..1] to zdd_status_vh_fc  as _AssetStatusCodes on Asset.status = _AssetStatusCodes.StatusCode
-  association [1..1] to ZDD_ASSET_TAG_VH_FC as _AssetTagCodes on Asset.asset_tag_number = _AssetTagCodes.AssetTagNumber
 {
   key uuid                  as UUID,
-      asset_tag_number      as AssetTagNumber,
+      concat( concat( main_asset_number, '-' ), asset_sub_number ) as AssetTagNumber,
       asset_description     as AssetDescription,
       company_code          as CompanyCode,
       main_asset_number     as MainAssetNumber,
@@ -27,7 +26,6 @@ define root view entity ZR_ASSETFC
       local_last_changed_at as LocalLastChangedAt,
       @Semantics.systemDateTime.lastChangedAt: true
       last_changed_at       as LastChangedAt,
-      _AssetHistory, // Association to asset history
-      _AssetStatusCodes, // Association to asset status codes
-      _AssetTagCodes
+      _AssetHistory,
+      _AssetStatusCodes
 }

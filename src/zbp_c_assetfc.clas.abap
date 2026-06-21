@@ -1,8 +1,6 @@
 class ZBP_C_ASSETFC definition
   public
-  abstract
-  final
-  for behavior of ZC_ASSETFC .
+  create private .
 
 public section.
 protected section.
