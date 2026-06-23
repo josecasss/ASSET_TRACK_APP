@@ -1,55 +1,52 @@
-@AccessControl.authorizationCheck: #MANDATORY
+@AccessControl.authorizationCheck: #NOT_ALLOWED
 @EndUserText: { label: 'Consumption Entity - Tracking Asset'}
 @Metadata.ignorePropagatedAnnotations: true
-
-@ObjectModel: { sapObjectNodeType.name: 'ZAsset_FCFC'}
-
-@Search.searchable: true //Activa busqueda avanzada (Es ese campo que busca todo, que esta al inicio)
 @Metadata.allowExtensions: true
+@Search.searchable: true
 
 define root view entity ZC_ASSETFC
   provider contract transactional_query
   as projection on ZR_ASSETFC
-  association [1..1] to ZR_ASSETFC as _BaseEntity on $projection.UUID = _BaseEntity.UUID
 {
   key UUID,
-      @Search.defaultSearchElement: true          //Para busqueda
-      @Search.fuzzinessThreshold: 0.8
-      @Search.ranking: #HIGH                      //Importancia para la busqueda avanzada
-      @ObjectModel.text.element: ['AssetDescription']  //Concatenar texto, con campos (Se pueden concatenar mas con comas) como se ve      
-      AssetTagNumber,
-      
- 
-      
 
-//      ZR_ASSETFC.AssetTagNumber as AssetTagNumberD,
-      
-      
-      @Search.defaultSearchElement: true          //Para busqueda
+      @Search.defaultSearchElement: true
       @Search.fuzzinessThreshold: 0.8
-      @Search.ranking: #HIGH                      //Importancia para la busqueda avanzada
+      @Search.ranking: #HIGH
+      @ObjectModel.text.element: ['AssetDescription']
+      AssetTagNumber,
+
+      @Search.defaultSearchElement: true
+      @Search.fuzzinessThreshold: 0.8
+      @Search.ranking: #HIGH
       AssetDescription,
-      
+
+      @ObjectModel.text.element: ['CompanyName']
       CompanyCode,
+      _CompanyCode.CompanyName      as CompanyName,
+
       MainAssetNumber,
       AssetSubNumber,
-      
-      @ObjectModel.text.element: ['AssetStatusDescription']  //Concatenar texto, con campos (Se pueden concatenar mas con comas) como se ve      
+
+      @ObjectModel.text.element: ['AssetStatusDescription']
       Status,
-      _AssetStatusCodes.StatusDescription as AssetStatusDescription,
-      
+      _AssetStatusCodes.StatusDescription  as AssetStatusDescription,
+      _StatusCriticality.Criticality       as StatusCriticality,
+
       CreationDate,
       ChangedDate,
-      @Semantics: { user.createdBy: true}
+
+      @Semantics.user.createdBy: true
       LocalCreatedBy,
-      @Semantics: { systemDateTime.createdAt: true }
+      @Semantics.systemDateTime.createdAt: true
       LocalCreatedAt,
-      @Semantics: { user.localInstanceLastChangedBy: true}
+      @Semantics.user.localInstanceLastChangedBy: true
       LocalLastChangedBy,
-      @Semantics: { systemDateTime.localInstanceLastChangedAt: true }
+      @Semantics.systemDateTime.localInstanceLastChangedAt: true
       LocalLastChangedAt,
-      @Semantics: { systemDateTime.lastChangedAt: true}
+      @Semantics.systemDateTime.lastChangedAt: true
       LastChangedAt,
+
       _AssetHistory : redirected to composition child ZC_ASSETHISTORYFC,
-      _BaseEntity
+      _Attachment   : redirected to composition child ZC_AssetAttachmentTP
 }

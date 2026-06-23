@@ -1,4 +1,4 @@
-@AccessControl.authorizationCheck: #MANDATORY
+@AccessControl.authorizationCheck: #NOT_REQUIRED
 @Metadata.allowExtensions: true
 @EndUserText.label: 'Root Entity - Tracking Asset History'
 define view entity ZR_ASSETHISTORYFC

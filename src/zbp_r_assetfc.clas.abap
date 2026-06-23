@@ -1,15 +1,15 @@
-class ZBP_R_ASSETFC definition
-  public
-  abstract
-  final
-  for behavior of ZR_ASSETFC .
+CLASS zbp_r_assetfc DEFINITION
+  PUBLIC
+  ABSTRACT
+  FINAL
+  FOR BEHAVIOR OF zr_assetfc.
 
-public section.
-protected section.
-private section.
+  PUBLIC SECTION.
+  PROTECTED SECTION.
+  PRIVATE SECTION.
+
 ENDCLASS.
 
-
-
-CLASS ZBP_R_ASSETFC IMPLEMENTATION.
+CLASS zbp_r_assetfc IMPLEMENTATION.
 ENDCLASS.
+

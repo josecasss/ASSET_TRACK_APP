@@ -1,13 +1,15 @@
-class ZBP_C_ASSETFC definition
-  public
-  create private .
+CLASS zbp_c_assetfc DEFINITION
+  PUBLIC
+  ABSTRACT
+  FINAL
+  FOR BEHAVIOR OF zc_assetfc.
 
-public section.
-protected section.
-private section.
+  PUBLIC SECTION.
+  PROTECTED SECTION.
+  PRIVATE SECTION.
+
 ENDCLASS.
 
-
-
-CLASS ZBP_C_ASSETFC IMPLEMENTATION.
+CLASS zbp_c_assetfc IMPLEMENTATION.
 ENDCLASS.
+

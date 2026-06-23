@@ -1,0 +1,36 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: {
+  typeName:       'Attachment',
+  typeNamePlural: 'Attachments',
+  title:          { type: #STANDARD, value: 'FileName' }
+}
+
+annotate view ZC_AssetAttachmentTP with
+{
+  @UI.hidden: true AttachUUID;
+  @UI.hidden: true UUID;
+
+  @UI.lineItem: [{ position: 10 }]
+  @EndUserText.label: 'File Name'
+  FileName;
+
+  @UI.lineItem: [{ position: 20 }]
+  @EndUserText.label: 'File'
+  FileContent;
+
+  @UI.lineItem: [{ position: 30 }]
+  @EndUserText.label: 'MIME Type'
+  MimeType;
+
+  @UI.lineItem: [{ position: 40 }]
+  @EndUserText.label: 'Uploaded By'
+  CreatedBy;
+
+  @UI.lineItem: [{ position: 50 }]
+  @EndUserText.label: 'Uploaded On'
+  CreatedAt;
+
+  @UI.hidden: true FileSize;
+  @UI.hidden: true LastChangedBy;
+  @UI.hidden: true LastChangedAt;
+}

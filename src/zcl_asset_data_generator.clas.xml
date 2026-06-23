@@ -3,15 +3,13 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <VSEOCLASS>
-    <CLSNAME>ZBP_C_ASSETFC</CLSNAME>
+    <CLSNAME>ZCL_ASSET_DATA_GENERATOR</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>Projection Behavior Definition for ZC_ASSETFC</DESCRIPT>
-    <CATEGORY>06</CATEGORY>
+    <DESCRIPT>Asset Tracker - Mock Data Generator</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>
     <UNICODE>X</UNICODE>
-    <CLSDEFINT>ZC_ASSETFC</CLSDEFINT>
    </VSEOCLASS>
   </asx:values>
  </asx:abap>

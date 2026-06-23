@@ -7,6 +7,8 @@
   }
 }
 define service ZUI_ASSET_FC_O4FC provider contracts odata_v4_ui {
-  expose ZC_ASSETFC as Asset;
-  expose ZC_ASSETHISTORYFC as AssetHistory;
+  expose ZC_ASSETFC           as Asset;
+  expose ZC_ASSETHISTORYFC    as AssetHistory;
+  expose ZC_AssetAttachmentTP as AssetAttachment;
+  expose ZC_ASSET_CCVH        as CompanyCodeVH;
 }

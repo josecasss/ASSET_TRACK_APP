@@ -1,8 +1,7 @@
 projection implementation in class ZBP_C_ASSETFC unique;
 strict ( 2 );
 extensible;
-use collaborative draft;
-use side effects;
+use draft;
 
 define behavior for ZC_ASSETFC alias Asset
 extensible
@@ -23,9 +22,9 @@ use etag
   use action Discard;
   use action Resume;
   use action Prepare;
-  use action Share;
 
   use association _AssetHistory { create; with draft; }
+  use association _Attachment   { create; with draft; }
 }
 
 define behavior for ZC_ASSETHISTORYFC alias AssetHistory
@@ -34,6 +33,12 @@ use etag
 {
   use update;
   use delete;
+  use association _Asset { with draft; }
+}
 
+define behavior for ZC_AssetAttachmentTP alias AssetAttachment
+{
+  use update;
+  use delete;
   use association _Asset { with draft; }
 }

@@ -1,14 +1,16 @@
-@AccessControl.authorizationCheck: #MANDATORY
+@AccessControl.authorizationCheck: #NOT_REQUIRED
 @Metadata.allowExtensions: true
-@ObjectModel.sapObjectNodeType.name: 'ZAsset_FCFC'
 @EndUserText.label: 'Root Entity - Tracking Asset'
 define root view entity ZR_ASSETFC
   as select from zassetfc as Asset
-  composition [0..*] of ZR_ASSETHISTORYFC as _AssetHistory
-  association [1..1] to zdd_status_vh_fc  as _AssetStatusCodes on Asset.status = _AssetStatusCodes.StatusCode
+  composition [0..*] of ZR_ASSETHISTORYFC       as _AssetHistory
+  composition [0..*] of ZI_AssetAttachmentTP    as _Attachment
+  association [1..1] to zdd_status_vh_fc        as _AssetStatusCodes on Asset.status = _AssetStatusCodes.StatusCode
+  association [0..1] to ZI_STATUS_CRIT_FC       as _StatusCriticality on Asset.status = _StatusCriticality.StatusCode
+  association [0..1] to ZR_ASSET_COMPCODE       as _CompanyCode       on Asset.company_code = _CompanyCode.CompanyCode
 {
   key uuid                  as UUID,
-      concat( concat( main_asset_number, '-' ), asset_sub_number ) as AssetTagNumber,
+      asset_tag_number      as AssetTagNumber,
       asset_description     as AssetDescription,
       company_code          as CompanyCode,
       main_asset_number     as MainAssetNumber,
@@ -27,5 +29,8 @@ define root view entity ZR_ASSETFC
       @Semantics.systemDateTime.lastChangedAt: true
       last_changed_at       as LastChangedAt,
       _AssetHistory,
-      _AssetStatusCodes
+      _Attachment,
+      _AssetStatusCodes,
+      _StatusCriticality,
+      _CompanyCode
 }

@@ -1,63 +1,59 @@
 managed implementation in class ZBP_R_ASSETFC unique;
 strict ( 2 );
-with collaborative draft;
-
+with draft;
 extensible;
+
 define behavior for ZR_ASSETFC alias Asset
 persistent table zassetfc
 extensible
-draft table zasset_dfc query ZASSET_TRACK_QUERY_01
-lock master
-total etag LastChangedAt
+draft table zasset_dfc
+lock master total etag LastChangedAt
 etag master LocalLastChangedAt
-authorization master ( global, instance )
+authorization master ( global )
 {
   create ( authorization : global );
   update;
   delete;
 
   association _AssetHistory { create; with draft; }
+  association _Attachment   { create; with draft; }
 
-  field ( numbering : managed, readonly )
-  UUID;
+  field ( numbering : managed, readonly ) UUID;
+  field ( readonly ) Status, LastChangedAt, LocalCreatedAt, LocalCreatedBy, LocalLastChangedAt, LocalLastChangedBy;
+  field ( mandatory ) AssetDescription, CompanyCode;
+  field ( features : instance ) AssetTagNumber;
 
-  field ( readonly )
-  Status,
-  LastChangedAt,
-  LocalCreatedAt,
-  LocalCreatedBy,
-  LocalLastChangedAt,
-  LocalLastChangedBy;
-
-  field ( mandatory )
-  AssetDescription,
-  CompanyCode;
-
-  field ( features : instance )
-  AssetTagNumber;
-
-  // Acciones de cambio de status
   action ( features : instance, authorization : update ) flagAsDamage        result [1] $self;
   action ( features : instance, authorization : update ) notMatchCostCenter  result [1] $self;
   action ( features : instance, authorization : update ) proposeWriteOff     result [1] $self;
   action ( features : instance, authorization : update ) flagAsSold          result [1] $self;
   action ( features : instance, authorization : update ) resetToNormal       result [1] $self;
 
-  // Determination
   determination setInitialStatus on modify { create; }
+  determination setCreationDate  on modify { create; }
+  determination setChangedDate   on modify { field AssetDescription; field CompanyCode; field AssetTagNumber; field MainAssetNumber; field AssetSubNumber; field Status; }
 
-  // Validation
-  //validation validateAssetTag on save { field AssetTagNumber; create; update; }
+  validation validateCompanyCode      on save { field CompanyCode; }
+  validation validateAssetDescription on save { field AssetDescription; }
+
+  determine action validateCompanyCodeAction { validation validateCompanyCode; }
+  determine action validateDescriptionAction { validation validateAssetDescription; }
+
+  side effects
+  {
+    determine action validateCompanyCodeAction executed on field CompanyCode      affects messages;
+    determine action validateDescriptionAction executed on field AssetDescription affects messages;
+  }
 
   draft action Activate optimized;
   draft action Discard;
   draft action Edit;
   draft action Resume;
-  draft action Share;
 
   draft determine action Prepare
   {
-//    validation validateAssetTag;
+    validation validateCompanyCode;
+    validation validateAssetDescription;
   }
 
   mapping for zassetfc corresponding extensible
@@ -87,16 +83,10 @@ etag dependent by _Asset
 lock dependent by _Asset
 authorization dependent by _Asset
 {
-  field ( readonly )
-  UUID,
-  ParentUUID;
-
-  field ( numbering : managed )
-  UUID;
-
+  field ( readonly ) UUID, ParentUUID;
+  field ( numbering : managed ) UUID;
   update;
   delete;
-
   mapping for zassethistoryfc corresponding extensible
   {
     UUID           = uuid;
@@ -106,6 +96,32 @@ authorization dependent by _Asset
     NewStatus      = new_status;
     Text000        = text000;
   }
+  association _Asset { with draft; }
+}
 
+define behavior for ZI_AssetAttachmentTP alias AssetAttachment
+  persistent table zasset_attachm
+  draft table zasset_attachmd
+  lock dependent by _Asset
+  authorization dependent by _Asset
+  etag dependent by _Asset
+{
+  field ( readonly, numbering : managed ) AttachUUID;
+  field ( readonly ) UUID, CreatedBy, CreatedAt, LastChangedBy, LastChangedAt;
+  update;
+  delete;
+  mapping for zasset_attachm
+  {
+    AttachUUID    = attach_uuid;
+    UUID          = parent_uuid;
+    FileContent   = file_content;
+    MimeType      = mime_type;
+    FileName      = file_name;
+    FileSize      = file_size;
+    CreatedBy     = local_created_by;
+    CreatedAt     = local_created_at;
+    LastChangedBy = local_last_changed_by;
+    LastChangedAt = last_changed_at;
+  }
   association _Asset { with draft; }
 }
