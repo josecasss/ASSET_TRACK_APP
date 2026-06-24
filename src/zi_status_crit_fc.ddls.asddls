@@ -10,7 +10,7 @@ define view entity ZI_STATUS_CRIT_FC
         when '00' then 3
         when '01' then 1
         when '02' then 2
-        when '03' then 1
+        when '03' then 5
         when '04' then 0
         else 0
       end         as Criticality

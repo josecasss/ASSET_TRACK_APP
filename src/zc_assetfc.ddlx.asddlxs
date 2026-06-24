@@ -6,15 +6,21 @@
   description:    { type: #STANDARD, value: 'AssetDescription' }
 }
 
+@UI.presentationVariant: [{
+  visualizations: [{ type: #AS_LINEITEM }]
+}]
+
 annotate entity ZC_ASSETFC with
 {
   @UI.facet: [
-    { id: 'AssetMasterData', purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE,
-      label: 'Asset Master Data',  position: 10 },
-    { id: 'History',         purpose: #STANDARD, type: #LINEITEM_REFERENCE,
-      label: 'Status History',     position: 20, targetElement: '_AssetHistory' },
-    { id: 'Attachments',     purpose: #STANDARD, type: #LINEITEM_REFERENCE,
-      label: 'Attachments',        position: 30, targetElement: '_Attachment' }
+    { id: 'GeneralInfo', purpose: #STANDARD, type: #FIELDGROUP_REFERENCE,
+      targetQualifier: 'GeneralInfo', label: 'General Information', position: 10 },
+    { id: 'StatusDates', purpose: #STANDARD, type: #FIELDGROUP_REFERENCE,
+      targetQualifier: 'StatusDates', label: 'Status & Dates',      position: 20 },
+    { id: 'History',     purpose: #STANDARD, type: #LINEITEM_REFERENCE,
+      label: 'Status History', position: 30, targetElement: '_AssetHistory' },
+    { id: 'Attachments', purpose: #STANDARD, type: #LINEITEM_REFERENCE,
+      label: 'Attachments',    position: 40, targetElement: '_Attachment' }
   ]
 
   @UI.hidden: true
@@ -22,33 +28,50 @@ annotate entity ZC_ASSETFC with
 
   @UI.lineItem: [
     { position: 10, importance: #HIGH, label: 'Asset Tag',
-      criticality: 'StatusCriticality', criticalityRepresentation: #WITH_ICON },
-    { type: #FOR_ACTION_GROUP, actionGroupId: 'ChangeStatusGroup', label: 'Change Status', position: 60 },
-    { type: #FOR_ACTION, dataAction: 'flagAsDamage',       label: 'Flag as Damage',        actionGroupId: 'ChangeStatusGroup' },
-    { type: #FOR_ACTION, dataAction: 'notMatchCostCenter', label: 'Not Match Cost Center', actionGroupId: 'ChangeStatusGroup' },
-    { type: #FOR_ACTION, dataAction: 'proposeWriteOff',    label: 'Propose Write Off',     actionGroupId: 'ChangeStatusGroup' },
-    { type: #FOR_ACTION, dataAction: 'flagAsSold',         label: 'Flag as Sold',          actionGroupId: 'ChangeStatusGroup' },
-    { type: #FOR_ACTION, dataAction: 'resetToNormal',      label: 'Reset to Normal',       actionGroupId: 'ChangeStatusGroup' }
+      criticality: 'StatusCriticality', criticalityRepresentation: #WITHOUT_ICON },
+    { type: #FOR_ACTION_GROUP, actionGroupId: 'ChangeStatusGroup',
+      label: 'Change Status', position: 60 },
+    { type: #FOR_ACTION, dataAction: 'flagAsDamage',
+      label: 'Flag as Damage',        actionGroupId: 'ChangeStatusGroup' },
+    { type: #FOR_ACTION, dataAction: 'notMatchCostCenter',
+      label: 'Not Match Cost Center', actionGroupId: 'ChangeStatusGroup' },
+    { type: #FOR_ACTION, dataAction: 'proposeWriteOff',
+      label: 'Propose Write Off',     actionGroupId: 'ChangeStatusGroup' },
+    { type: #FOR_ACTION, dataAction: 'flagAsSold',
+      label: 'Flag as Sold',          actionGroupId: 'ChangeStatusGroup' },
+    { type: #FOR_ACTION, dataAction: 'resetToNormal',
+      label: 'Reset to Normal',       actionGroupId: 'ChangeStatusGroup' },
+    { type: #FOR_ACTION, dataAction: 'transferAsset',
+      label: 'Transfer Asset', position: 70 }
   ]
   @UI.identification: [
-    { position: 10 },
-    { type: #FOR_ACTION_GROUP, actionGroupId: 'ChangeStatusGroupOP', label: 'Change Status', position: 60 },
-    { type: #FOR_ACTION, dataAction: 'flagAsDamage',       label: 'Flag as Damage',        actionGroupId: 'ChangeStatusGroupOP' },
-    { type: #FOR_ACTION, dataAction: 'notMatchCostCenter', label: 'Not Match Cost Center', actionGroupId: 'ChangeStatusGroupOP' },
-    { type: #FOR_ACTION, dataAction: 'proposeWriteOff',    label: 'Propose Write Off',     actionGroupId: 'ChangeStatusGroupOP' },
-    { type: #FOR_ACTION, dataAction: 'flagAsSold',         label: 'Flag as Sold',          actionGroupId: 'ChangeStatusGroupOP' },
-    { type: #FOR_ACTION, dataAction: 'resetToNormal',      label: 'Reset to Normal',       actionGroupId: 'ChangeStatusGroupOP' }
+    { position: 5,  label: 'Asset Tag' },
+    { type: #FOR_ACTION_GROUP, actionGroupId: 'ChangeStatusGroupOP',
+      label: 'Change Status', position: 60 },
+    { type: #FOR_ACTION, dataAction: 'flagAsDamage',
+      label: 'Flag as Damage',        actionGroupId: 'ChangeStatusGroupOP' },
+    { type: #FOR_ACTION, dataAction: 'notMatchCostCenter',
+      label: 'Not Match Cost Center', actionGroupId: 'ChangeStatusGroupOP' },
+    { type: #FOR_ACTION, dataAction: 'proposeWriteOff',
+      label: 'Propose Write Off',     actionGroupId: 'ChangeStatusGroupOP' },
+    { type: #FOR_ACTION, dataAction: 'flagAsSold',
+      label: 'Flag as Sold',          actionGroupId: 'ChangeStatusGroupOP' },
+    { type: #FOR_ACTION, dataAction: 'resetToNormal',
+      label: 'Reset to Normal',       actionGroupId: 'ChangeStatusGroupOP' },
+    { type: #FOR_ACTION, dataAction: 'transferAsset',
+      label: 'Transfer Asset', position: 70 }
   ]
   @UI.selectionField: [{ position: 10 }]
   AssetTagNumber;
 
-  @UI.lineItem:       [{ position: 20, importance: #HIGH, label: 'Description' }]
-  @UI.identification: [{ position: 20, label: 'Description' }]
+  @UI.lineItem:   [{ position: 40, importance: #HIGH, label: 'Description' }]
+  @UI.fieldGroup: [{ qualifier: 'GeneralInfo', position: 40, label: 'Description' }]
+  @UI.multiLineText: true
   AssetDescription;
 
-  @UI.lineItem:       [{ position: 30, importance: #MEDIUM, label: 'Company Code' }]
-  @UI.identification: [{ position: 30, label: 'Company Code' }]
-  @UI.selectionField: [{ position: 20 }]
+  @UI.lineItem:   [{ position: 50, importance: #MEDIUM, label: 'Company Code' }]
+  @UI.fieldGroup: [{ qualifier: 'GeneralInfo', position: 50, label: 'Company Code' }]
+  @UI.selectionField: [{ position: 50 }]
   @Consumption.valueHelpDefinition: [{ entity:                      { name: 'ZC_ASSET_CCVH', element: 'CompanyCode' },
                                        presentationVariantQualifier: 'HIERARCHY',
                                        label:                        'Company Code' }]
@@ -57,32 +80,64 @@ annotate entity ZC_ASSETFC with
   @UI.hidden: true
   CompanyName;
 
-  @UI.lineItem:       [{ position: 40, importance: #LOW, label: 'Main Asset No.' }]
-  @UI.identification: [{ position: 40, label: 'Main Asset No.' }]
+  @UI.lineItem:   [{ position: 20, importance: #LOW, label: 'Main Asset No.' }]
+  @UI.fieldGroup: [{ qualifier: 'GeneralInfo', position: 20, label: 'Asset' }]
   MainAssetNumber;
 
-  @UI.lineItem:       [{ position: 50, importance: #LOW, label: 'Sub Number' }]
-  @UI.identification: [{ position: 50, label: 'Sub Number' }]
+  @UI.lineItem:   [{ position: 30, importance: #LOW, label: 'Sub Number' }]
+  @UI.fieldGroup: [{ qualifier: 'GeneralInfo', position: 30, label: 'SNo' }]
   AssetSubNumber;
+
+  @UI.lineItem:   [{ position: 35, importance: #MEDIUM, label: 'Inventory No.' }]
+  @UI.fieldGroup: [{ qualifier: 'GeneralInfo', position: 60, label: 'Inventory No.' }]
+  @UI.selectionField: [{ position: 20 }]
+  @Consumption.valueHelpDefinition: [{
+    entity:                      { name: 'ZC_ASSET_INVNUMVH', element: 'InventoryNumber' },
+    presentationVariantQualifier: 'HIERARCHY',
+    label:                        'Inventory Number',
+    additionalBinding: [
+      { localElement: 'CompanyCode', element: 'CompanyCode', usage: #FILTER },
+      { localElement: 'CostCenter',  element: 'CostCenter',  usage: #FILTER }
+    ]
+  }]
+  InventoryNumber;
+
+  @UI.hidden: true
+  InvDescription;
+
+  @UI.lineItem:   [{ position: 37, importance: #MEDIUM, label: 'Cost Center' }]
+  @UI.fieldGroup: [{ qualifier: 'GeneralInfo', position: 70, label: 'Cost Center' }]
+  @UI.selectionField: [{ position: 30 }]
+  @Consumption.valueHelpDefinition: [{
+    entity:                      { name: 'ZC_ASSET_CENTERVH', element: 'CostCenter' },
+    presentationVariantQualifier: 'HIERARCHY',
+    label:                        'Cost Center',
+    additionalBinding: [
+      { localElement: 'CompanyCode', element: 'CompanyCode', usage: #FILTER }
+    ]
+  }]
+  CostCenter;
+
+  @UI.hidden: true
+  CostCenterName;
 
   @UI.lineItem: [{ position: 60, importance: #HIGH, label: 'Status',
                    criticality: 'StatusCriticality', criticalityRepresentation: #WITH_ICON }]
-  @UI.identification: [{ position: 60, label: 'Current Status',
-                          criticality: 'StatusCriticality' }]
-  @UI.selectionField: [{ position: 30 }]
+  @UI.fieldGroup: [{ qualifier: 'StatusDates', position: 10, label: 'Current Status',
+                     criticality: 'StatusCriticality' }]
+  @UI.selectionField: [{ position: 10 }]
   Status;
 
-  @UI.hidden: true
-  AssetStatusDescription;
-
-  @UI.hidden: true
-  StatusCriticality;
+  @UI.hidden: true AssetStatusDescription;
+  @UI.hidden: true StatusCriticality;
 
   @UI.lineItem:       [{ position: 70, importance: #LOW, label: 'Creation Date' }]
-  @UI.identification: [{ position: 70, label: 'Creation Date' }]
+  @UI.fieldGroup:     [{ qualifier: 'StatusDates', position: 20, label: 'Creation Date' }]
+  @Consumption.filter.selectionType: #INTERVAL
+  @UI.selectionField: [{ position: 40 }]
   CreationDate;
 
-  @UI.identification: [{ position: 80, label: 'Changed Date' }]
+  @UI.fieldGroup: [{ qualifier: 'StatusDates', position: 30, label: 'Changed Date' }]
   ChangedDate;
 
   @UI.hidden: true LocalCreatedBy;

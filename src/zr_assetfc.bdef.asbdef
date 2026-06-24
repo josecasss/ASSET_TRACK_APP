@@ -19,30 +19,38 @@ authorization master ( global )
   association _Attachment   { create; with draft; }
 
   field ( numbering : managed, readonly ) UUID;
-  field ( readonly ) Status, LastChangedAt, LocalCreatedAt, LocalCreatedBy, LocalLastChangedAt, LocalLastChangedBy;
-  field ( mandatory ) AssetDescription, CompanyCode;
-  field ( features : instance ) AssetTagNumber;
+  field ( readonly ) AssetTagNumber, Status, LastChangedAt, LocalCreatedAt, LocalCreatedBy, LocalLastChangedAt, LocalLastChangedBy;
+  field ( mandatory ) AssetDescription, CompanyCode, MainAssetNumber, AssetSubNumber, CostCenter, InventoryNumber;
 
   action ( features : instance, authorization : update ) flagAsDamage        result [1] $self;
   action ( features : instance, authorization : update ) notMatchCostCenter  result [1] $self;
   action ( features : instance, authorization : update ) proposeWriteOff     result [1] $self;
   action ( features : instance, authorization : update ) flagAsSold          result [1] $self;
   action ( features : instance, authorization : update ) resetToNormal       result [1] $self;
+  action ( features : instance, authorization : update ) transferAsset parameter ZA_ASSET_TRANSFER_PARAM result [1] $self;
+
+  static action uploadAssets   parameter ZAE_ASSET_UPLOAD_PARAM;
+  static action downloadTemplate;
 
   determination setInitialStatus on modify { create; }
   determination setCreationDate  on modify { create; }
-  determination setChangedDate   on modify { field AssetDescription; field CompanyCode; field AssetTagNumber; field MainAssetNumber; field AssetSubNumber; field Status; }
+  determination setChangedDate   on modify { field AssetDescription; field CompanyCode; field MainAssetNumber; field AssetSubNumber; field InventoryNumber; field CostCenter; field Status; }
 
-  validation validateCompanyCode      on save { field CompanyCode; }
-  validation validateAssetDescription on save { field AssetDescription; }
-
-  determine action validateCompanyCodeAction { validation validateCompanyCode; }
-  determine action validateDescriptionAction { validation validateAssetDescription; }
+  validation validateCompanyCode      on save { create; field CompanyCode; field MainAssetNumber; field AssetSubNumber; }
+  validation validateAssetDescription on save { create; field AssetDescription; }
+  validation validateAssetTag         on save { create; field AssetTagNumber; field CostCenter; field InventoryNumber; }
 
   side effects
   {
-    determine action validateCompanyCodeAction executed on field CompanyCode      affects messages;
-    determine action validateDescriptionAction executed on field AssetDescription affects messages;
+    field CompanyCode affects field CostCenter, field InventoryNumber;
+    field CostCenter  affects field InventoryNumber;
+
+    action flagAsDamage       affects entity _AssetHistory;
+    action notMatchCostCenter affects entity _AssetHistory;
+    action proposeWriteOff    affects entity _AssetHistory;
+    action flagAsSold         affects entity _AssetHistory;
+    action resetToNormal      affects entity _AssetHistory;
+    action transferAsset      affects entity _AssetHistory;
   }
 
   draft action Activate optimized;
@@ -54,19 +62,22 @@ authorization master ( global )
   {
     validation validateCompanyCode;
     validation validateAssetDescription;
+    validation validateAssetTag;
   }
 
   mapping for zassetfc corresponding extensible
   {
-    UUID               = uuid;
-    AssetTagNumber     = asset_tag_number;
-    AssetDescription   = asset_description;
-    CompanyCode        = company_code;
-    MainAssetNumber    = main_asset_number;
-    AssetSubNumber     = asset_sub_number;
-    Status             = status;
-    CreationDate       = creation_date;
-    ChangedDate        = changed_date;
+    UUID             = uuid;
+    AssetTagNumber   = asset_tag_number;
+    AssetDescription = asset_description;
+    CompanyCode      = company_code;
+    MainAssetNumber  = main_asset_number;
+    AssetSubNumber   = asset_sub_number;
+    InventoryNumber  = inventory_number;
+    CostCenter       = cost_center;
+    Status           = status;
+    CreationDate     = creation_date;
+    ChangedDate      = changed_date;
     LocalCreatedBy     = local_created_by;
     LocalCreatedAt     = local_created_at;
     LocalLastChangedBy = local_last_changed_by;
@@ -83,10 +94,8 @@ etag dependent by _Asset
 lock dependent by _Asset
 authorization dependent by _Asset
 {
-  field ( readonly ) UUID, ParentUUID;
+  field ( readonly ) UUID, ParentUUID, HisID, PreviousStatus, NewStatus, Text000;
   field ( numbering : managed ) UUID;
-  update;
-  delete;
   mapping for zassethistoryfc corresponding extensible
   {
     UUID           = uuid;
@@ -121,7 +130,7 @@ define behavior for ZI_AssetAttachmentTP alias AssetAttachment
     CreatedBy     = local_created_by;
     CreatedAt     = local_created_at;
     LastChangedBy = local_last_changed_by;
-    LastChangedAt = last_changed_at;
+    LastChangedAt = local_last_changed_at;
   }
   association _Asset { with draft; }
 }

@@ -34,7 +34,7 @@ define view entity ZC_AssetAttachmentTP
       CreatedAt,
       @Semantics.user.localInstanceLastChangedBy: true
       LastChangedBy,
-      @Semantics.systemDateTime.lastChangedAt: true
+      @Semantics.systemDateTime.localInstanceLastChangedAt: true
       LastChangedAt,
 
       _Asset: redirected to parent ZC_ASSETFC

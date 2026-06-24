@@ -5,16 +5,22 @@ define root view entity ZR_ASSETFC
   as select from zassetfc as Asset
   composition [0..*] of ZR_ASSETHISTORYFC       as _AssetHistory
   composition [0..*] of ZI_AssetAttachmentTP    as _Attachment
-  association [1..1] to zdd_status_vh_fc        as _AssetStatusCodes on Asset.status = _AssetStatusCodes.StatusCode
-  association [0..1] to ZI_STATUS_CRIT_FC       as _StatusCriticality on Asset.status = _StatusCriticality.StatusCode
-  association [0..1] to ZR_ASSET_COMPCODE       as _CompanyCode       on Asset.company_code = _CompanyCode.CompanyCode
+  association [1..1] to zdd_status_vh_fc        as _AssetStatusCodes  on  Asset.status            = _AssetStatusCodes.StatusCode
+  association [0..1] to ZI_STATUS_CRIT_FC       as _StatusCriticality on  Asset.status            = _StatusCriticality.StatusCode
+  association [0..1] to ZR_ASSET_COMPCODE       as _CompanyCode       on  Asset.company_code      = _CompanyCode.CompanyCode
+  association [0..1] to ZC_ASSET_CENTERVH       as _CostCenterVH      on  Asset.company_code      = _CostCenterVH.CompanyCode
+                                                                       and Asset.cost_center       = _CostCenterVH.CostCenter
+  association [0..1] to ZC_ASSET_INVNUMVH       as _InvNumVH          on  Asset.company_code      = _InvNumVH.CompanyCode
+                                                                       and Asset.inventory_number  = _InvNumVH.InventoryNumber
 {
   key uuid                  as UUID,
-      asset_tag_number      as AssetTagNumber,
+      concat( ltrim( main_asset_number, '0' ), concat( '-', lpad( ltrim( asset_sub_number, '0' ), 2, '0' ) ) ) as AssetTagNumber,
       asset_description     as AssetDescription,
       company_code          as CompanyCode,
       main_asset_number     as MainAssetNumber,
       asset_sub_number      as AssetSubNumber,
+      inventory_number      as InventoryNumber,
+      cost_center           as CostCenter,
       status                as Status,
       creation_date         as CreationDate,
       changed_date          as ChangedDate,
@@ -32,5 +38,7 @@ define root view entity ZR_ASSETFC
       _Attachment,
       _AssetStatusCodes,
       _StatusCriticality,
-      _CompanyCode
+      _CompanyCode,
+      _CostCenterVH,
+      _InvNumVH
 }

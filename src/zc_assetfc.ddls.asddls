@@ -13,7 +13,6 @@ define root view entity ZC_ASSETFC
       @Search.defaultSearchElement: true
       @Search.fuzzinessThreshold: 0.8
       @Search.ranking: #HIGH
-      @ObjectModel.text.element: ['AssetDescription']
       AssetTagNumber,
 
       @Search.defaultSearchElement: true
@@ -22,11 +21,16 @@ define root view entity ZC_ASSETFC
       AssetDescription,
 
       @ObjectModel.text.element: ['CompanyName']
+      @UI.textArrangement: #TEXT_LAST
       CompanyCode,
       _CompanyCode.CompanyName      as CompanyName,
 
       MainAssetNumber,
       AssetSubNumber,
+      InventoryNumber,
+      _InvNumVH.InvDescription      as InvDescription,
+      CostCenter,
+      _CostCenterVH.CostCenterName  as CostCenterName,
 
       @ObjectModel.text.element: ['AssetStatusDescription']
       Status,
